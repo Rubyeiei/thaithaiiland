@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deserted Island Personality Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F0E8D0; /* sandy background */
+            color: #3E4A45; /* dark green text */
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #3E6B46; /* dark green */
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            background-color: #A1C6A1; /* light green */
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        .answer-options {
+            margin-top: 10px;
+        }
+        .answer-option {
+            display: block;
+            margin: 10px 0;
+            background-color: #F1D58C; /* light brown */
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: left;
+        }
+        .answer-option:hover {
+            background-color: #E0B25B; /* dark brown */
+        }
+        .button {
+            background-color: #3E6B46;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #2F4F39;
+        }
+        footer {
+            background-color: #3E6B46;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .island {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 80px;
+            height: 80px;
+            background-image: url('https://www.example.com/coconut-tree-image.jpg'); /* coconut tree background */
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        .sea {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 50px;
+            background-color: #3A7F7A; /* sea color */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        Discover Your Personality Through a Deserted Island Survival Challenge
+    </header>
+
+    <div class="container">
+        <div id="question-container" class="question">
+            <h2>Welcome to the game! Ready to discover your true personality?</h2>
+            <p>Imagine you are stranded on a deserted island with a few basic supplies. Your responses to hypothetical survival situations will reveal your personality. Let's begin!</p>
+            <button id="start-button" class="button" onclick="startGame()">Start Game</button>
+        </div>
+        
+        <div id="question" class="question" style="display:none;">
+            <h3 id="question-text"></h3>
+            <div id="answer-options" class="answer-options"></div>
+        </div>
+
+        <div id="results" style="display:none;">
+            <h2>Your Personality Result</h2>
+            <p id="result-description"></p>
+            <button class="button" onclick="restartGame()">Restart Game</button>
+        </div>
+    </div>
+
+    <footer>
+        Island Survival Game | Fun Personality Quiz
+    </footer>
+
+    <div class="island"></div>
+    <div class="sea"></div>
+
+    <script>
+        const questions = [
+            {
+                text: "The storm has hit, and the island is flooded. You are forced to seek shelter. What do you do first?",
+                options: [
+                    { answer: "I immediately look for a high place or cave where I can stay safe. I’m focused on survival.", value: 'A' },
+                    { answer: "I analyze the situation calmly, making sure I choose a shelter that will keep me dry and secure.", value: 'B' },
+                    { answer: "I look for any opportunity to create something new. I’ll find shelter but also see if I can build something useful.", value: 'C' },
+                    { answer: "I don’t panic. I take it easy, finding a safe spot to wait it out until the storm passes.", value: 'D' },
+                    { answer: "I immediately gather everyone, share my thoughts, and we work together to find the safest shelter.", value: 'E' }
+                ]
+            },
+            {
+                text: "You’ve just found a strange fruit on the island. What do you do?",
+                options: [
+                    { answer: "I take a quick bite to test it out. Life is all about taking risks.", value: 'A' },
+                    { answer: "I carefully inspect it and ensure it’s safe before trying it.", value: 'B' },
+                    { answer: "I try to figure out its uses beyond just eating it. Maybe it can be used for something else.", value: 'C' },
+                    { answer: "I’ll take my time and savor the curiosity of this new fruit.", value: 'D' },
+                    { answer: "I share it with the group and ask everyone to help decide if it’s safe.", value: 'E' }
+                ]
+            },
+            {
+                text: "You are running low on food supplies. How do you handle the situation?",
+                options: [
+                    { answer: "I’ll ration everything efficiently and stick to the plan. We need to conserve resources.", value: 'A' },
+                    { answer: "I’ll make sure everyone has an equal share and manage the food strategically.", value: 'B' },
+                    { answer: "I’ll get creative and figure out new ways to use the resources we have.", value: 'C' },
+                    { answer: "I’ll take the food and enjoy it while it lasts.", value: 'D' },
+                    { answer: "I’ll ask the group for ideas and collaborate to make the most out of what we have.", value: 'E' }
+                ]
+            },
+            {
+                text: "One of your companions is injured. How do you help them?",
+                options: [
+                    { answer: "I act quickly, doing whatever it takes to help them immediately.", value: 'A' },
+                    { answer: "I stay calm and assess the injury before taking the best course of action.", value: 'B' },
+                    { answer: "I think outside the box and try to come up with a creative solution to help them.", value: 'C' },
+                    { answer: "I stay calm and provide comfort while others help.", value: 'D' },
+                    { answer: "I consult with others for a team effort in solving the problem.", value: 'E' }
+                ]
+            },
+            {
+                text: "You are feeling homesick. How do you deal with it?",
+                options: [
+                    { answer: "I push through and stay focused on survival. Homesickness is temporary.", value: 'A' },
+                    { answer: "I take some time to reflect but remain focused on the task.", value: 'B' },
+                    { answer: "I use this time to create something new to help cope with the feeling.", value: 'C' },
+                    { answer: "I allow myself to feel homesick and take things slowly.", value: 'D' },
+                    { answer: "I talk it out with the others and build a sense of camaraderie.", value: 'E' }
+                ]
+            }
+        ];
+
+        let answers = [];
+        let questionIndex = 0;
+
+        function startGame() {
+            document.getElementById("start-button").style.display = "none";
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = questions[questionIndex];
+            document.getElementById("question-text").innerText = question.text;
+            const answerOptions = question.options.map(option => {
+                return `<div class="answer-option" onclick="answer('${option.value}')">${option.answer}</div>`;
+            }).join('');
+            document.getElementById("answer-options").innerHTML = answerOptions;
+            document.getElementById("question").style.display = "block";
+        }
+
+        function answer(value) {
+            answers.push(value);
+            questionIndex++;
+            if (questionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            let result = "";
+            const resultCounts = {
+                A: answers.filter(answer => answer === 'A').length,
+                B: answers.filter(answer => answer === 'B').length,
+                C: answers.filter(answer => answer === 'C').length,
+                D: answers.filter(answer => answer === 'D').length,
+                E: answers.filter(answer => answer === 'E').length
+            };
+
+            const maxResult = Object.keys(resultCounts).reduce((a, b) => resultCounts[a] > resultCounts[b] ? a : b);
+
+            switch (maxResult) {
+                case 'A':
+                    result = "Tom Yum Goong (Spicy Shrimp Soup): You are bold, energetic, and thrive under pressure.";
+                    break;
+                case 'B':
+                    result = "Green Curry Chicken: You are thoughtful, calm, and calculated.";
+                    break;
+                case 'C':
+                    result = "Khao Soi Gai (Chicken Curry Noodles): You are creative and innovative.";
+                    break;
+                case 'D':
+                    result = "Noodle Soup: You are laid-back and relaxed.";
+                    break;
+                case 'E':
+                    result = "Kai Luk Keuy (Egg with Tamarind Sauce): You are compassionate and value connection.";
+                    break;
+            }
+
+            document.getElementById("result-description").innerText = result;
+            document.getElementById("question").style.display = "none";
+            document.getElementById("results").style.display = "block";
+        }
+
+        function restartGame() {
+            answers = [];
+            questionIndex = 0;
+            document.getElementById("results").style.display = "none";
+            document.getElementById("start-button").style.display = "inline-block";
+        }
+    </script>
+</body>
+</html>
